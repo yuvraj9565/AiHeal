@@ -46,7 +46,7 @@ model Progress {
   assessmentId String   @unique
   currentStep  Int      @default(1)
   completed    Boolean  @default(false)
-  data         Json?    // additional progress data
+  data         String?  // additional progress data (JSON string)
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
   assessment   Assessment @relation(fields: [assessmentId], references: [id], onDelete: Cascade)
