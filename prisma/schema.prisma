@@ -1,0 +1,55 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Assessment {
+  id          String   @id @default(cuid())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  responses   Response[]
+  recommendations Recommendation[]
+  progress    Progress?
+}
+
+model Response {
+  id           String   @id @default(cuid())
+  assessmentId String
+  questionKey  String
+  answer       String
+  createdAt    DateTime @default(now())
+  assessment   Assessment @relation(fields: [assessmentId], references: [id], onDelete: Cascade)
+
+  @@index([assessmentId])
+}
+
+model Recommendation {
+  id           String   @id @default(cuid())
+  assessmentId String
+  category     String   // diet, exercise, habits, doctor
+  content      Json     // structured recommendation data
+  createdAt    DateTime @default(now())
+  assessment   Assessment @relation(fields: [assessmentId], references: [id], onDelete: Cascade)
+
+  @@index([assessmentId])
+}
+
+model Progress {
+  id           String   @id @default(cuid())
+  assessmentId String   @unique
+  currentStep  Int      @default(1)
+  completed    Boolean  @default(false)
+  data         Json?    // additional progress data
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  assessment   Assessment @relation(fields: [assessmentId], references: [id], onDelete: Cascade)
+
+  @@index([assessmentId])
+}
