@@ -34,7 +34,7 @@ model Recommendation {
   id           String   @id @default(cuid())
   assessmentId String
   category     String   // diet, exercise, habits, doctor
-  content      Json     // structured recommendation data
+  content      String   // structured recommendation data (JSON string)
   createdAt    DateTime @default(now())
   assessment   Assessment @relation(fields: [assessmentId], references: [id], onDelete: Cascade)
 
